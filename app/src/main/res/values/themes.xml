@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.TeamX" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/light_yellow</item>
+        <item name="colorPrimaryVariant">@color/light_orange</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+<!--        <item name="colorSecondary"></item>-->
+<!--        <item name="colorSecondaryVariant">@color/blue_dark</item>-->
+<!--        <item name="colorOnSecondary">@color/black</item>-->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="fontFamily">@font/architects_daughter_regular</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.TeamX" parent="Base.Theme.TeamX" />
+</resources>
