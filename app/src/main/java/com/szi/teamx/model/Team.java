@@ -8,12 +8,17 @@ import java.util.Objects;
 
 @IgnoreExtraProperties
 public class Team {
+    private String id;
     private String name;
     private String owner;
     private String description;
     private Map<String, String> requirements;
 
     public Team() {
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -37,12 +42,12 @@ public class Team {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Team team = (Team) o;
-        return Objects.equals(name, team.name) && Objects.equals(owner, team.owner) && Objects.equals(description, team.description) && Objects.equals(requirements, team.requirements);
+        return Objects.equals(id, team.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, owner, description, requirements);
+        return Objects.hash(id);
     }
 
     @Override

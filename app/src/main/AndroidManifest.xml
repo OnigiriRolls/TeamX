@@ -13,6 +13,9 @@
         android:theme="@style/Base.Theme.TeamX"
         tools:targetApi="31">
         <activity
+            android:name=".TeamInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".MyTeamsActivity"
             android:exported="false" />
         <activity

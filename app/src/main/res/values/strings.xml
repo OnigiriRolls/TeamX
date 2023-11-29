@@ -6,4 +6,6 @@
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="username">Username</string>
+    <string name="apply">Apply</string>
+    <string name="team_applied">Applied</string>
 </resources>

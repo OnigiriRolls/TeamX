@@ -3,33 +3,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Base.Theme.TeamX"
-    tools:context=".MyTeamsActivity"
     android:background="@color/light_yellow"
-    android:padding="30dp">
+    android:padding="30dp"
+    android:theme="@style/Base.Theme.TeamX"
+    tools:context=".MyTeamsActivity">
 
     <TextView
         android:id="@+id/tTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:gravity="top"
         android:text="@string/my_teams"
         android:textColor="@color/black"
         android:textSize="28sp"
-        android:textStyle="bold"
-        android:layout_centerHorizontal="true"/>
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/lTeams"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/footer"
         android:layout_below="@+id/tTitle"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="40dp"
+        android:cacheColorHint="#FFFFFFFF"
+        android:divider="#FFA09C9C"
         android:dividerHeight="2dp"
+        android:scrollbarThumbVertical="@drawable/listview_scrollbar_thumb"
         android:textAlignment="center" />
+
+    <include layout="@layout/footer_layout"
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
