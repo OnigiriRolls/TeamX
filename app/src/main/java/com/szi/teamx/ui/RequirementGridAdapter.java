@@ -9,51 +9,49 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.szi.teamx.R;
-import com.szi.teamx.model.Team;
 
 import java.util.List;
 
-public class TeamNameListAdapter extends ArrayAdapter<Team> {
+public class RequirementGridAdapter extends ArrayAdapter<String>  {
     private Context context;
-    private List<Team> teams;
+    private List<String> requirements;
     private int layoutResID;
 
-    public TeamNameListAdapter(Context context, int layoutResID, List<Team> teams) {
-        super(context, layoutResID, teams);
+    public RequirementGridAdapter(Context context, int layoutResID, List<String> requirements) {
+        super(context, layoutResID, requirements);
         this.context = context;
         this.layoutResID = layoutResID;
-        this.teams = teams;
+        this.requirements = requirements;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ItemHolder itemHolder;
+        RequirementGridAdapter.ItemHolder itemHolder;
         View view = convertView;
 
         if (view == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            itemHolder = new ItemHolder();
+            itemHolder = new RequirementGridAdapter.ItemHolder();
 
             view = inflater.inflate(layoutResID, parent, false);
-            itemHolder.tName = (TextView) view.findViewById(R.id.tName);
+            itemHolder.tRequirement = (TextView) view.findViewById(R.id.tRequirement);
 
             view.setTag(itemHolder);
         } else {
-            itemHolder = (ItemHolder) view.getTag();
+            itemHolder = (RequirementGridAdapter.ItemHolder) view.getTag();
         }
-        if (teams != null && teams.size() >= position) {
-            final Team tItem = teams.get(position);
-            itemHolder.tName.setText(tItem.getName());
+
+        if (requirements != null && requirements.size() >= position) {
+            final String tItem = requirements.get(position);
+            itemHolder.tRequirement.setText(tItem);
+            Log.i("hello", tItem);
         }
 
         return view;
     }
 
     private static class ItemHolder {
-        TextView tName;
+        TextView tRequirement;
     }
 }

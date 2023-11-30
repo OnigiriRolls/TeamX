@@ -22,6 +22,7 @@ import com.szi.teamx.model.Team;
 import com.szi.teamx.ui.TeamNameListAdapter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MyTeamsActivity extends AppCompatActivity {
@@ -92,6 +93,13 @@ public class MyTeamsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TeamInfoActivity.class);
         intent.putExtra("teamName", team.getName());
         intent.putExtra("teamDescription", team.getDescription());
+        intent.putExtra("teamId", team.getId());
+        intent.putExtra("teamOwner", team.getOwner());
+
+        Collection<String> values = team.getRequirements().values();
+        ArrayList<String> valuesList = new ArrayList<>(values);
+
+        intent.putStringArrayListExtra("teamRequirements",  valuesList);
         startActivity(intent);
     }
 
