@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="140dp"
+    android:layout_height="70dp"
     android:layout_gravity="center"
+    android:backgroundTint="@color/light_orange"
     app:cardCornerRadius="10dp"
-    app:cardElevation="5dp"
-    android:backgroundTint="@color/light_orange">
+    app:cardElevation="5dp">
 
     <TextView
         android:id="@+id/tRequirement"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:autoSizeMaxTextSize="20sp"
+        android:autoSizeTextType="none"
         android:gravity="center"
-        android:textSize="20sp"
-        android:textFontWeight="500"
         android:padding="5dp"
-        android:layout_gravity="center" />
+        android:textFontWeight="500" />
 
 </androidx.cardview.widget.CardView>

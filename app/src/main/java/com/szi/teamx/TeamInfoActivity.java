@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,33 +35,10 @@ public class TeamInfoActivity extends AppCompatActivity {
 
         textViewTeamName.setText(teamName);
         textViewTeamDescription.setText(teamDescription);
-
-        if (requirements != null) {
-            ListView gridRequirementsLeft = findViewById(R.id.gRequirementsLeft);
-
-            int splitIndex = requirements.size() / 2;
-            List<String> sublist1 = requirements.subList(0, splitIndex);
-            List<String> sublist2 = requirements.subList(splitIndex, requirements.size());
-
-
-            if (requirements.size() / 2 - 1 != 0) {
-                final RequirementGridAdapter adapterLeft = new RequirementGridAdapter(this, R.layout.requirement_grid_item, sublist1);
-                gridRequirementsLeft.setAdapter(adapterLeft);
-            } else {
-                final RequirementGridAdapter adapterLeft = new RequirementGridAdapter(this, R.layout.requirement_grid_item, Collections.singletonList(requirements.get(0)));
-                gridRequirementsLeft.setAdapter(adapterLeft);
-            }
-
-
-            ListView gridRequirementsRight = findViewById(R.id.gRequirementsRight);
-            if (requirements.size() / 2 != requirements.size() - 1) {
-                final RequirementGridAdapter adapterRight = new RequirementGridAdapter(this, R.layout.requirement_grid_item, sublist2);
-                gridRequirementsRight.setAdapter(adapterRight);
-            } else {
-                final RequirementGridAdapter adapterRight = new RequirementGridAdapter(this, R.layout.requirement_grid_item, Collections.singletonList(requirements.get(requirements.size() / 2)));
-                gridRequirementsRight.setAdapter(adapterRight);
-            }
-        }
+        
+        GridView gridRequirementsLeft = findViewById(R.id.gRequirements);
+        final RequirementGridAdapter adapterLeft = new RequirementGridAdapter(this, R.layout.requirement_grid_item, requirements);
+        gridRequirementsLeft.setAdapter(adapterLeft);
     }
 
     public void onApply(View view) {

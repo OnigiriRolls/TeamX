@@ -24,39 +24,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tName"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textFontWeight="500"
-        android:textSize="20sp"
-        android:textAlignment="center"/>
+        android:textSize="20sp" />
 
-    <LinearLayout
+    <GridView
+        android:id="@+id/gRequirements"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/lFooter"
         android:layout_below="@id/tDescription"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="60dp"  >
-
-        <ListView
-            android:id="@+id/gRequirementsLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="5dp"
-            android:dividerHeight="5dp"
-            android:divider="@color/light_yellow"/>
-
-        <ListView
-            android:id="@+id/gRequirementsRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:dividerHeight="5dp"
-            android:divider="@color/light_yellow"/>
-
-    </LinearLayout>
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="60dp"
+        android:divider="@color/light_yellow"
+        android:dividerHeight="5dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp" />
 
     <RelativeLayout
         android:id="@+id/lFooter"
@@ -65,29 +52,31 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
         <Button
             android:id="@+id/bApply"
             android:layout_width="170dp"
             android:layout_height="match_parent"
-            app:backgroundTint="@null"
             android:background="@drawable/button_dark"
             android:onClick="onApply"
             android:text="@string/apply"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
 
         <ImageButton
             android:id="@+id/bQR"
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="40dp"
+            android:layout_toEndOf="@+id/bApply"
             android:backgroundTint="@color/medium_orange"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            android:onClick="onQRCode"/>
+            android:onClick="onQRCode"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
     </RelativeLayout>
 
 </RelativeLayout>
