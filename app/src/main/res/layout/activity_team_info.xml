@@ -37,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/lFooter"
         android:layout_below="@id/tDescription"
+        android:layout_centerInParent="true"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="60dp"
@@ -65,17 +66,19 @@
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:backgroundTint="@null" />
+            app:backgroundTint="@null"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
 
         <ImageButton
             android:id="@+id/bQR"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="40dp"
             android:backgroundTint="@color/medium_orange"
             android:onClick="onQRCode"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/baseline_qr_code_scanner_black_48" />
     </RelativeLayout>
 
 </RelativeLayout>

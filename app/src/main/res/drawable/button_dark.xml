@@ -4,20 +4,20 @@
     <item android:state_pressed="true">
         <shape>
             <solid android:color="@color/light_orange" />
-            <corners android:radius="20dp" />
+            <corners android:radius="5dp" />
         </shape>
     </item>
     <item android:state_enabled="false">
         <shape>
             <solid android:color="@color/light_orange" />
-            <corners android:radius="20dp" />
+            <corners android:radius="5dp" />
         </shape>
     </item>
     <!-- Default state -->
     <item>
         <shape>
             <solid android:color="@color/medium_orange" />
-            <corners android:radius="20dp" />
+            <corners android:radius="5dp" />
         </shape>
     </item>
 </selector>
