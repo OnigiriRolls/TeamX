@@ -9,21 +9,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.google.firebase.Firebase;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.szi.teamx.model.Team;
 import com.szi.teamx.ui.TeamNameListAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class MyTeamsActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
@@ -103,4 +104,27 @@ public class MyTeamsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (result != null) {
+            if (result.getContents() != null) {
+                String scannedId = result.getContents();
+                Log.i("scan", scannedId);
+                Optional<Team> team = teams.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
+                team.ifPresent(this::openTeamInfoActivity);
+            }
+        }
+    }
+
+    public void onScan(View view) {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setPrompt("Scan Team QR Code");
+        intentIntegrator.setOrientationLocked(true);
+        intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
+        intentIntegrator.initiateScan();
+    }
 }
