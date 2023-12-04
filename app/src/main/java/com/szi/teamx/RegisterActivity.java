@@ -8,10 +8,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.FirebaseApp;
 import com.szi.teamx.utils.AuthenticationValidator;
 
-public class MainActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity {
     private EditText email;
     private EditText password;
     private TextView emailError, passwordError;
@@ -20,7 +19,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
         inputsValidator = new AuthenticationValidator();
 
@@ -62,26 +61,23 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-
-        FirebaseApp.initializeApp(this);
     }
 
-    public void onLogin(View view) {
-        if (inputsValidator.inputsAreValid(email.getText().toString(), password.getText().toString(), emailError, passwordError)) {
-            login(email.getText().toString(), password.getText().toString());
 
-            if (getCurrentUser() != null) {
+    public void onRegister(View view) {
+        if (inputsValidator.inputsAreValid(email.getText().toString(), password.getText().toString(), emailError, passwordError)) {
+            register(email.getText().toString(), password.getText().toString());
+
+            if(getCurrentUser() != null)
+            {
                 Intent intent = new Intent(this, MyTeamsActivity.class);
                 startActivity(intent);
-            } else {
-                passwordError.setText(R.string.login_fail_error);
+                finish();
+            }
+            else {
+                passwordError.setText(R.string.register_fail_error);
                 passwordError.setVisibility(View.VISIBLE);
             }
         }
-    }
-
-    public void onRegister(View view) {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
     }
 }

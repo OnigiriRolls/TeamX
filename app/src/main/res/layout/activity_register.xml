@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_yellow"
+    android:padding="30dp"
+    tools:context=".RegisterActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1.5"
+                android:text="@string/email"
+                android:gravity="center_vertical"
+                android:textFontWeight="500"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/tEmail"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="2"
+                android:hint="@string/email"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                android:textSize="17sp"
+                android:backgroundTint="#991C1B1F"
+                android:textCursorDrawable="@drawable/text_hint_color_selector"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tEmailError"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="0.2"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:visibility="invisible"/>
+
+        <LinearLayout
+            android:id="@+id/layoutName"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1.5"
+                android:text="@string/password"
+                android:gravity="center_vertical"
+                android:textFontWeight="500"
+                android:textSize="20sp" />
+
+
+            <EditText
+                android:id="@+id/tPassword"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="2"
+                android:textColor="@color/black"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:textSize="17sp"
+                android:backgroundTint="#991C1B1F"
+                android:textCursorDrawable="@drawable/text_hint_color_selector"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tPasswordError"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_weight="0.2"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:layout_marginBottom="30dp"
+            android:visibility="invisible"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bRegister"
+        android:layout_width="180dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_corners"
+        android:onClick="onRegister"
+        android:text="@string/register"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

@@ -19,11 +19,17 @@
         android:theme="@style/Base.Theme.TeamX"
         tools:targetApi="31">
         <activity
+            android:name=".BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".CaptureActivityPortrait"
             android:exported="false"
             android:screenOrientation="sensorPortrait"
             android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".TeamInfoActivity"
             android:exported="false" />

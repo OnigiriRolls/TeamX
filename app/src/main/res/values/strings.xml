@@ -8,4 +8,9 @@
     <string name="username">Username</string>
     <string name="apply">Apply</string>
     <string name="team_applied">Applied</string>
+    <string name="email">Email</string>
+    <string name="email_empty_error">Email cannot be empty</string>
+    <string name="password_empty_error">Password cannot be empty</string>
+    <string name="login_fail_error">Login failed</string>
+    <string name="register_fail_error">Register failed</string>
 </resources>
