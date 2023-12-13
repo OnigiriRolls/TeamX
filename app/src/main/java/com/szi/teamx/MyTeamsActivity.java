@@ -1,15 +1,14 @@
 package com.szi.teamx;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class MyTeamsActivity extends AppCompatActivity {
+public class MyTeamsActivity extends BaseActivity {
     private DatabaseReference databaseReference;
     private List<Team> teams = new ArrayList<>();
 
@@ -81,12 +80,18 @@ public class MyTeamsActivity extends AppCompatActivity {
                     System.out.println("Eroare la citire");
                 }
             }
+
             @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {}
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+            }
+
             @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {}
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
         });
     }
 
@@ -100,7 +105,7 @@ public class MyTeamsActivity extends AppCompatActivity {
         Collection<String> values = team.getRequirements().values();
         ArrayList<String> valuesList = new ArrayList<>(values);
 
-        intent.putStringArrayListExtra("teamRequirements",  valuesList);
+        intent.putStringArrayListExtra("teamRequirements", valuesList);
         startActivity(intent);
     }
 

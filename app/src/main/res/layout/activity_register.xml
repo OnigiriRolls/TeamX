@@ -19,17 +19,6 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="10dp">
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1.5"
-                android:text="@string/email"
-                android:gravity="center_vertical"
-                android:textFontWeight="500"
-                android:textSize="20sp" />
-
             <EditText
                 android:id="@+id/tEmail"
                 android:layout_width="0dp"
@@ -46,7 +35,7 @@
         <TextView
             android:id="@+id/tEmailError"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:layout_weight="0.2"
             android:textColor="@color/red"
@@ -59,18 +48,6 @@
             android:layout_height="70dp"
             android:gravity="center_vertical"
             android:layout_marginBottom="10dp">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1.5"
-                android:text="@string/password"
-                android:gravity="center_vertical"
-                android:textFontWeight="500"
-                android:textSize="20sp" />
-
 
             <EditText
                 android:id="@+id/tPassword"
@@ -88,7 +65,7 @@
         <TextView
             android:id="@+id/tPasswordError"
             android:layout_width="match_parent"
-            android:layout_height="25dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.2"
             android:textColor="@color/red"
             android:textSize="18sp"

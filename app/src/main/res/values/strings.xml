@@ -9,8 +9,13 @@
     <string name="apply">Apply</string>
     <string name="team_applied">Applied</string>
     <string name="email">Email</string>
-    <string name="email_empty_error">Email cannot be empty</string>
-    <string name="password_empty_error">Password cannot be empty</string>
-    <string name="login_fail_error">Login failed</string>
-    <string name="register_fail_error">Register failed</string>
+    <string name="email_empty_error">Email cannot be empty!</string>
+    <string name="password_empty_error">Password cannot be empty!</string>
+    <string name="login_fail_error">Login failed!</string>
+    <string name="register_fail_error">Register failed!</string>
+    <string name="already_user_registered">There is already a user registered with this email!</string>
+    <string name="invalid_email">Invalid email!</string>
+    <string name="password_6_characters">Password should have at least 6 characters!</string>
+    <string name="invalid_credentials">Invalid credentials!</string>
+    <string name="login_failed">Login failed!</string>
 </resources>
