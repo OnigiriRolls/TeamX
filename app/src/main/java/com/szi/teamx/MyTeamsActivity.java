@@ -1,5 +1,6 @@
 package com.szi.teamx;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,8 +8,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +31,7 @@ import java.util.Optional;
 public class MyTeamsActivity extends BaseActivity {
     private DatabaseReference databaseReference;
     private List<Team> teams = new ArrayList<>();
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +97,15 @@ public class MyTeamsActivity extends BaseActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitConfirmationDialog();
+            }
+        };
+
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void openTeamInfoActivity(Team team) {
@@ -131,5 +144,24 @@ public class MyTeamsActivity extends BaseActivity {
         intentIntegrator.setOrientationLocked(true);
         intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
         intentIntegrator.initiateScan();
+    }
+
+    private void showExitConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do you want to exit the application?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

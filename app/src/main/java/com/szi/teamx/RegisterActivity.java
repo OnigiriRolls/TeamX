@@ -1,14 +1,19 @@
 package com.szi.teamx;
 
+import static com.szi.teamx.utils.ProgressBar.hideLoadingDialog;
+import static com.szi.teamx.utils.ProgressBar.showLoadingDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +30,8 @@ public class RegisterActivity extends BaseActivity {
     private EditText password;
     private TextView emailError, passwordError;
     private AuthenticationValidator inputsValidator;
+    private Button registerButton;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +44,7 @@ public class RegisterActivity extends BaseActivity {
         password = findViewById(R.id.tPassword);
         emailError = findViewById(R.id.tEmailError);
         passwordError = findViewById(R.id.tPasswordError);
+        registerButton = findViewById(R.id.bRegister);
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -75,14 +83,17 @@ public class RegisterActivity extends BaseActivity {
 
     public void onRegister(View view) {
         if (inputsValidator.inputsAreValid(email.getText().toString(), password.getText().toString(), emailError, passwordError)) {
+            registerButton.setEnabled(false);
+            dialog = showLoadingDialog(this);
             register(email.getText().toString(), password.getText().toString());
-
-            if (getCurrentUser() != null) {
-                Intent intent = new Intent(this, MyTeamsActivity.class);
-                startActivity(intent);
-                finish();
-            }
         }
+    }
+
+    private void startActivity(){
+        Intent intent = new Intent(RegisterActivity.this, MyTeamsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void register(String email, String password) {
@@ -91,8 +102,10 @@ public class RegisterActivity extends BaseActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        if (!task.isSuccessful()) {
+                        if (task.isSuccessful()) {
+                            startActivity();
+                            hideLoadingDialog(dialog);
+                        } else {
                             try {
                                 throw Objects.requireNonNull(task.getException());
                             } catch (FirebaseAuthWeakPasswordException e) {
@@ -108,6 +121,9 @@ public class RegisterActivity extends BaseActivity {
                                 passwordError.setText(R.string.register_fail_error);
                                 passwordError.setVisibility(View.VISIBLE);
                             }
+
+                            registerButton.setEnabled(true);
+                            hideLoadingDialog(dialog);
                         }
                     }
                 });

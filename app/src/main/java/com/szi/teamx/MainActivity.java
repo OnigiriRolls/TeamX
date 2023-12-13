@@ -1,11 +1,16 @@
 package com.szi.teamx;
 
+import static com.szi.teamx.utils.ProgressBar.hideLoadingDialog;
+import static com.szi.teamx.utils.ProgressBar.showLoadingDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -28,6 +33,8 @@ public class MainActivity extends BaseActivity {
     private EditText password;
     private TextView emailError, passwordError;
     private AuthenticationValidator inputsValidator;
+    private AlertDialog dialog;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,7 @@ public class MainActivity extends BaseActivity {
         password = findViewById(R.id.tPassword);
         emailError = findViewById(R.id.tEmailError);
         passwordError = findViewById(R.id.tPasswordError);
+        loginButton = findViewById(R.id.bLogin);
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -94,15 +102,12 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onLogin(View view) {
+
         if (inputsValidator.inputsAreValid(email.getText().toString(), password.getText().toString(), emailError, passwordError)) {
+            loginButton.setEnabled(false);
+            dialog = showLoadingDialog(this);
             login(email.getText().toString(), password.getText().toString());
         }
-    }
-
-    private void startMyTeamsActivity() {
-        Intent intent = new Intent(this, MyTeamsActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private void login(String email, String password) {
@@ -111,7 +116,8 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            startMyTeamsActivity();
+                            startActivity(MyTeamsActivity.class);
+                            hideLoadingDialog(dialog);
                         } else {
                             try {
                                 throw Objects.requireNonNull(task.getException());
@@ -125,6 +131,9 @@ public class MainActivity extends BaseActivity {
                                 passwordError.setText(R.string.login_failed);
                                 passwordError.setVisibility(View.VISIBLE);
                             }
+
+                            loginButton.setEnabled(true);
+                            hideLoadingDialog(dialog);
                         }
                     }
                 });
@@ -132,8 +141,7 @@ public class MainActivity extends BaseActivity {
 
 
     public void onRegister(View view) {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+        startActivityWithoutFinish(RegisterActivity.class);
     }
 
     private void showExitConfirmationDialog() {
