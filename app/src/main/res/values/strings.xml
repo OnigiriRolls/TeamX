@@ -20,4 +20,6 @@
     <string name="login_failed">Login failed!</string>
     <string name="all_teams">All teams</string>
     <string name="search_by_name_tag">Search by name/tag</string>
+    <string name="delete">Delete</string>
+    <string name="leave">Leave</string>
 </resources>

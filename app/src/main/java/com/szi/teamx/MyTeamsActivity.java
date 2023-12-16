@@ -82,6 +82,27 @@ public class MyTeamsActivity extends BaseActivity {
             }
         });
 
+        databaseReference.child("teamsOwner").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    List<String> teamIds = new ArrayList<>();
+                    for (DataSnapshot teamSnapshot : snapshot.getChildren()) {
+                        String teamId = (String) teamSnapshot.getValue();
+                        teamIds.add(teamId);
+                    }
+
+                    retrieveTeamsDetails(teamIds, adapter);
+                } catch (Exception e) {
+                    Log.i("hello", "eroare la citire");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
