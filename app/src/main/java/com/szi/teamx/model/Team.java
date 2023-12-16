@@ -2,7 +2,6 @@ package com.szi.teamx.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,9 +9,11 @@ import java.util.Objects;
 public class Team {
     private String id;
     private String name;
+    private String lowerCaseName;
     private String owner;
     private String description;
     private Map<String, String> requirements;
+    private Map<String, String> requirementsLower;
 
     public Team() {
     }
@@ -23,6 +24,14 @@ public class Team {
 
     public String getName() {
         return name;
+    }
+
+    public String getLowerCaseName() {
+        return lowerCaseName;
+    }
+
+    public Map<String, String> getRequirementsLower() {
+        return requirementsLower;
     }
 
     public String getOwner() {
@@ -55,9 +64,11 @@ public class Team {
         return name;
     }
 
-    public void update(Team team){
+    public void update(Team team) {
         this.name = team.name;
+        this.lowerCaseName = team.lowerCaseName;
         this.description = team.description;
         this.requirements = team.requirements;
+        this.requirementsLower = team.requirementsLower;
     }
 }

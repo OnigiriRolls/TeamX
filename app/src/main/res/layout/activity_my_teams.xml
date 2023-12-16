@@ -16,18 +16,36 @@
         android:gravity="top"
         android:text="@string/my_teams"
         android:textColor="@color/black"
+        android:layout_marginBottom="30dp"
         android:textSize="28sp"
         android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/tSearchText"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_below="@id/tTitle"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:inputType="text"
+        android:autoSizeMaxTextSize="20sp"
+        android:autoSizeTextType="none"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/search_by_name_tag"
+        android:textColor="@color/black"
+        android:backgroundTint="#991C1B1F"
+        android:textCursorDrawable="@drawable/text_hint_color_selector"
+        android:maxLines="1"/>
 
     <ListView
         android:id="@+id/lTeams"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/footer"
-        android:layout_below="@+id/tTitle"
+        android:layout_below="@id/tSearchText"
         android:layout_centerInParent="true"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="40dp"
         android:layout_marginRight="30dp"
         android:layout_marginBottom="40dp"
         android:cacheColorHint="#FFFFFFFF"

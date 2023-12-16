@@ -7,6 +7,16 @@
     android:background="@color/light_yellow"
     android:gravity="center">
 
+    <Button
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/button_corners_simple"
+        android:onClick="handleAllTeams"
+        android:text="\?"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <ImageButton
         android:id="@+id/bQR"
         android:layout_width="80dp"

@@ -2,6 +2,7 @@ package com.szi.teamx;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,29 +33,34 @@ public class BaseActivity extends AppCompatActivity {
         return getCurrentUser() != null;
     }
 
-    protected void logout() {
+    protected void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void startActivity(Class<? extends AppCompatActivity> cl) {
+        Intent intent = new Intent(this, cl);
+        startActivity(intent);
+        finish();
+    }
+
+    protected void startActivityWithoutFinish(Class<? extends AppCompatActivity> cl) {
+        Intent intent = new Intent(this, cl);
+        startActivity(intent);
+    }
+
+    private void logout() {
         mAuth.signOut();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    protected void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
     public void logout(View view) {
         logout();
     }
 
-    public void startActivity(Class<? extends AppCompatActivity> cl) {
-        Intent intent = new Intent(this, cl);
-        startActivity(intent);
-        finish();
-    }
-
-    public void startActivityWithoutFinish(Class<? extends AppCompatActivity> cl) {
-        Intent intent = new Intent(this, cl);
-        startActivity(intent);
+    public void handleAllTeams(View view) {
+        Log.d("all", "in handle");
+        startActivityWithoutFinish(AllTeamsActivity.class);
     }
 }

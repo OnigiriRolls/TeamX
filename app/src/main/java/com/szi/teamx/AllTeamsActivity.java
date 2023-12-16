@@ -1,8 +1,9 @@
 package com.szi.teamx;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -10,9 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,12 +26,14 @@ import com.szi.teamx.ui.TeamNameListAdapter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class MyTeamsActivity extends BaseActivity {
+public class AllTeamsActivity extends BaseActivity {
     private DatabaseReference databaseReference;
     private List<Team> teams = new ArrayList<>();
-    private AlertDialog dialog;
+    private List<Team> initialTeams = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +41,10 @@ public class MyTeamsActivity extends BaseActivity {
         setContentView(R.layout.activity_my_teams);
 
         TextView title = findViewById(R.id.tTitle);
-        title.setText(R.string.my_teams);
+        title.setText(R.string.all_teams);
 
         EditText searchText = findViewById(R.id.tSearchText);
-        searchText.setVisibility(View.GONE);
+        searchText.setVisibility(View.VISIBLE);
 
         ListView listTeams = findViewById(R.id.lTeams);
         final TeamNameListAdapter adapter = new TeamNameListAdapter(this, R.layout.team_name_list_item, teams);
@@ -57,64 +58,69 @@ public class MyTeamsActivity extends BaseActivity {
             }
         });
 
-        String userId = getCurrentUser().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference().child("users").child(userId);
+        databaseReference = database.getReference();
 
         databaseReference.child("teams").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try {
-                    List<String> teamIds = new ArrayList<>();
                     for (DataSnapshot teamSnapshot : snapshot.getChildren()) {
-                        String teamId = (String) teamSnapshot.getValue();
-                        teamIds.add(teamId);
+                        Team team = teamSnapshot.getValue(Team.class);
+                        if (team != null) {
+                            teams.add(team);
+                            initialTeams.add(team);
+                        }
                     }
-                    // Call a method to retrieve team details based on team IDs
-                    retrieveTeamsDetails(teamIds, adapter);
+                    adapter.notifyDataSetChanged();
                 } catch (Exception e) {
-                    Log.i("hello", "eroare la citire");
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+        searchText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void handleOnBackPressed() {
-                showExitConfirmationDialog();
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
-        };
 
-        getOnBackPressedDispatcher().addCallback(this, callback);
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String query = charSequence.toString().trim();
+                if (query.isEmpty()) {
+                    teams.clear();
+                    teams.addAll(initialTeams);
+                    adapter.notifyDataSetChanged();
+                } else
+                    updateListView(query, adapter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
-    private void retrieveTeamsDetails(List<String> teamIds, TeamNameListAdapter adapter) {
-        DatabaseReference teamsRef = FirebaseDatabase.getInstance().getReference().child("teams");
-        for (String teamId : teamIds) {
-            teamsRef.child(teamId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    try {
-                        Team team = snapshot.getValue(Team.class);
+    private void updateListView(String query, TeamNameListAdapter adapter) {
+        query = query.toLowerCase().trim();
 
-                        if (team != null) {
-                            teams.add(team);
-                            adapter.notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Eroare la citire");
-                    }
-                }
+        teams.clear();
+        String finalQuery = query;
+        List<Team> searchedTeams = initialTeams.stream()
+                .filter(v -> v.getLowerCaseName().contains(finalQuery) || checkRequirements(v.getRequirementsLower(), finalQuery))
+                .collect(Collectors.toList());
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-        }
+        if (!searchedTeams.isEmpty())
+            teams.addAll(searchedTeams);
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private boolean checkRequirements(Map<String, String> requirements, String query) {
+        return requirements.values().stream().anyMatch(r -> r.contains(query));
     }
 
     private void openTeamInfoActivity(Team team) {
@@ -153,24 +159,5 @@ public class MyTeamsActivity extends BaseActivity {
         intentIntegrator.setOrientationLocked(true);
         intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
         intentIntegrator.initiateScan();
-    }
-
-    private void showExitConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to exit the application?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        System.exit(0);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                        dialog.dismiss();
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 }
