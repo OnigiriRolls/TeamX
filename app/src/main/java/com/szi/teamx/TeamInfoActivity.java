@@ -1,5 +1,8 @@
 package com.szi.teamx;
 
+import static com.szi.teamx.utils.ProgressBar.hideLoadingDialog;
+import static com.szi.teamx.utils.ProgressBar.showLoadingDialog;
+
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,15 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.szi.teamx.model.User;
 import com.szi.teamx.ui.RequirementGridAdapter;
 import com.szi.teamx.utils.QRCodeGenerator;
 
@@ -30,12 +31,14 @@ import java.util.Objects;
 public class TeamInfoActivity extends BaseActivity {
     private String id;
     private String ownerId;
+    private String key;
     private String userId;
     private QRCodeGenerator generator;
     private Button applyButton;
     private Button deleteButton;
     private Button leaveButton;
     private DatabaseReference databaseReference;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class TeamInfoActivity extends BaseActivity {
 
         id = getIntent().getStringExtra("teamId");
         ownerId = getIntent().getStringExtra("teamOwner");
+        key = getIntent().getStringExtra("teamKey");
         userId = getCurrentUser().getUid();
 
         if (Objects.equals(ownerId, userId)) {
@@ -116,45 +120,28 @@ public class TeamInfoActivity extends BaseActivity {
 
     public void onDelete(View view) {
         deleteButton.setEnabled(false);
-        deleteTeamFromUser();
+        dialog = showLoadingDialog(this);
+        deleteTeamFromUser("teamsOwner");
     }
 
-    private void deleteTeamFromUser() {
-        DatabaseReference userTeamsOwnerRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("teamsOwner");
-
-        userTeamsOwnerRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    List<String> teamsOwnerList = new ArrayList<>();
-
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String teamId = snapshot.getValue(String.class);
-
-                        if (!teamId.equals(id)) {
-                            teamsOwnerList.add(teamId);
+    private void deleteTeamFromUser(String teamsOrTeamsOwner) {
+        DatabaseReference userTeamsOwnerRef = FirebaseDatabase.getInstance().getReference();
+        userTeamsOwnerRef.child("users").child(userId)
+                .child(teamsOrTeamsOwner)
+                .child(key).removeValue()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("team", "delete success");
+                        if (teamsOrTeamsOwner.equals("teamsOwner"))
+                            deleteTeamFromTeams();
+                        else {
+                            hideLoadingDialog(dialog);
+                            finish();
                         }
+                    } else {
+                        Log.d("team", "delete error");
                     }
-
-                    userTeamsOwnerRef.setValue(teamsOwnerList)
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    deleteTeamFromTeams();
-                                    Log.d("team", "Team deleted successfully");
-                                } else {
-
-                                    Log.d("team", "Error deleting team");
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle database error
-                Log.e("DeleteTeam", "Database error: " + databaseError.getMessage());
-            }
-        });
+                });
     }
 
     private void deleteTeamFromTeams() {
@@ -163,6 +150,7 @@ public class TeamInfoActivity extends BaseActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d("team", "delete success");
+                        hideLoadingDialog(dialog);
                         finish();
                     } else {
                         Log.d("team", "delete error");
@@ -172,6 +160,7 @@ public class TeamInfoActivity extends BaseActivity {
 
     public void onLeave(View view) {
         leaveButton.setEnabled(false);
+        deleteTeamFromUser("teams");
     }
 
     public void onQRCode(View view) {

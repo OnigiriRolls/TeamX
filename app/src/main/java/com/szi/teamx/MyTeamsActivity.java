@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,20 +63,46 @@ public class MyTeamsActivity extends BaseActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference().child("users").child(userId);
 
-        databaseReference.child("teams").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("teams").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 try {
-                    List<String> teamIds = new ArrayList<>();
-                    for (DataSnapshot teamSnapshot : snapshot.getChildren()) {
-                        String teamId = (String) teamSnapshot.getValue();
-                        teamIds.add(teamId);
-                    }
-                    // Call a method to retrieve team details based on team IDs
-                    retrieveTeamsDetails(teamIds, adapter);
+                    String teamId = (String) snapshot.getValue();
+                    String teamKey = (String) snapshot.getKey();
+                    if (teamId != null)
+                        retrieveTeamsDetails(teamKey, teamId, adapter);
                 } catch (Exception e) {
-                    Log.i("hello", "eroare la citire");
+                    System.out.println("Eroare la citire");
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.d("team", "changed");
+                String teamId = (String) snapshot.getValue();
+                String teamKey = (String) snapshot.getKey();
+                if (teamId != null) {
+                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    removedTeam.ifPresent(team -> teams.remove(team));
+
+                    retrieveTeamsDetails(teamKey, teamId, adapter);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                String teamId = (String) snapshot.getValue();
+                if (teamId != null) {
+                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    if (removedTeam.isPresent()) {
+                        teams.remove(removedTeam.get());
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
             }
 
             @Override
@@ -82,20 +110,46 @@ public class MyTeamsActivity extends BaseActivity {
             }
         });
 
-        databaseReference.child("teamsOwner").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("teamsOwner").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 try {
-                    List<String> teamIds = new ArrayList<>();
-                    for (DataSnapshot teamSnapshot : snapshot.getChildren()) {
-                        String teamId = (String) teamSnapshot.getValue();
-                        teamIds.add(teamId);
-                    }
-
-                    retrieveTeamsDetails(teamIds, adapter);
+                    String teamId = (String) snapshot.getValue();
+                    String teamKey = (String) snapshot.getKey();
+                    if (teamId != null)
+                        retrieveTeamsDetails(teamKey, teamId, adapter);
                 } catch (Exception e) {
-                    Log.i("hello", "eroare la citire");
+                    System.out.println("Eroare la citire");
                 }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.d("team", "changed");
+                String teamId = (String) snapshot.getValue();
+                String teamKey = (String) snapshot.getKey();
+                if (teamId != null) {
+                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    removedTeam.ifPresent(team -> teams.remove(team));
+
+                    retrieveTeamsDetails(teamKey, teamId, adapter);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                String teamId = (String) snapshot.getValue();
+                if (teamId != null) {
+                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    if (removedTeam.isPresent()) {
+                        teams.remove(removedTeam.get());
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
             }
 
             @Override
@@ -113,29 +167,27 @@ public class MyTeamsActivity extends BaseActivity {
         getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
-    private void retrieveTeamsDetails(List<String> teamIds, TeamNameListAdapter adapter) {
+    private void retrieveTeamsDetails(String teamKey, String teamId, TeamNameListAdapter adapter) {
         DatabaseReference teamsRef = FirebaseDatabase.getInstance().getReference().child("teams");
-        for (String teamId : teamIds) {
-            teamsRef.child(teamId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    try {
-                        Team team = snapshot.getValue(Team.class);
-
-                        if (team != null) {
-                            teams.add(team);
-                            adapter.notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Eroare la citire");
+        teamsRef.child(teamId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    Team team = snapshot.getValue(Team.class);
+                    team.setKey(teamKey);
+                    if (team != null) {
+                        teams.add(team);
+                        adapter.notifyDataSetChanged();
                     }
+                } catch (Exception e) {
+                    System.out.println("Eroare la citire");
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     private void openTeamInfoActivity(Team team) {
@@ -144,6 +196,7 @@ public class MyTeamsActivity extends BaseActivity {
         intent.putExtra("teamDescription", team.getDescription());
         intent.putExtra("teamId", team.getId());
         intent.putExtra("teamOwner", team.getOwner());
+        intent.putExtra("teamKey", team.getKey());
 
         Collection<String> values = team.getRequirements().values();
         ArrayList<String> valuesList = new ArrayList<>(values);

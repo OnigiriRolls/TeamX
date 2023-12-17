@@ -8,6 +8,7 @@ import java.util.Objects;
 @IgnoreExtraProperties
 public class Team {
     private String id;
+    private String key;
     private String name;
     private String lowerCaseName;
     private String owner;
@@ -16,6 +17,10 @@ public class Team {
     private Map<String, String> requirementsLower;
 
     public Team() {
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public String getId() {
@@ -70,5 +75,9 @@ public class Team {
         this.description = team.description;
         this.requirements = team.requirements;
         this.requirementsLower = team.requirementsLower;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
