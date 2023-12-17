@@ -125,23 +125,25 @@ public class TeamInfoActivity extends BaseActivity {
     }
 
     private void deleteTeamFromUser(String teamsOrTeamsOwner) {
-        DatabaseReference userTeamsOwnerRef = FirebaseDatabase.getInstance().getReference();
-        userTeamsOwnerRef.child("users").child(userId)
-                .child(teamsOrTeamsOwner)
-                .child(key).removeValue()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d("team", "delete success");
-                        if (teamsOrTeamsOwner.equals("teamsOwner"))
-                            deleteTeamFromTeams();
-                        else {
-                            hideLoadingDialog(dialog);
-                            finish();
+        if (key != null) {
+            DatabaseReference userTeamsOwnerRef = FirebaseDatabase.getInstance().getReference();
+            userTeamsOwnerRef.child("users").child(userId)
+                    .child(teamsOrTeamsOwner)
+                    .child(key).removeValue()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d("team", "delete success");
+                            if (teamsOrTeamsOwner.equals("teamsOwner"))
+                                deleteTeamFromTeams();
+                            else {
+                                hideLoadingDialog(dialog);
+                                finish();
+                            }
+                        } else {
+                            Log.d("team", "delete error");
                         }
-                    } else {
-                        Log.d("team", "delete error");
-                    }
-                });
+                    });
+        }
     }
 
     private void deleteTeamFromTeams() {

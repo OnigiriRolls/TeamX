@@ -10,9 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.szi.teamx.model.Team;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseActivity extends AppCompatActivity {
-
     private FirebaseAuth mAuth;
 
     @Override

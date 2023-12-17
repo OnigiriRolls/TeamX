@@ -1,5 +1,7 @@
 package com.szi.teamx;
 
+import static com.szi.teamx.model.MyTeams.MY_TEAMS;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,12 +14,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.szi.teamx.model.Team;
@@ -61,24 +64,62 @@ public class AllTeamsActivity extends BaseActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
 
-        databaseReference.child("teams").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("teams").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 try {
-                    for (DataSnapshot teamSnapshot : snapshot.getChildren()) {
-                        Team team = teamSnapshot.getValue(Team.class);
-                        if (team != null) {
-                            teams.add(team);
-                            initialTeams.add(team);
-                        }
+                    Team team = snapshot.getValue(Team.class);
+                    if (team != null && !MY_TEAMS.contains(team)) {
+                        teams.add(team);
+                        initialTeams.add(team);
                     }
                     adapter.notifyDataSetChanged();
                 } catch (Exception e) {
+                    System.out.println("Eroare la citire");
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                try {
+                    Team team = snapshot.getValue(Team.class);
+                    Log.i("hello", "in on change");
+                    if (team != null && !MY_TEAMS.contains(team)) {
+                        if (teams.contains(team))
+                            teams.set(teams.indexOf(team), team);
+                        else teams.add(team);
+
+                        if (initialTeams.contains(team))
+                            initialTeams.set(initialTeams.indexOf(team), team);
+                        else initialTeams.add(team);
+
+                        adapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Eroare la citire");
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                try {
+                    Team team = snapshot.getValue(Team.class);
+                    if (team != null && !MY_TEAMS.contains(team)) {
+                        teams.remove(team);
+                        initialTeams.remove(team);
+                    }
+                    adapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    System.out.println("Eroare la citire");
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
 

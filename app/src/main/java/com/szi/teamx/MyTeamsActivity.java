@@ -1,5 +1,7 @@
 package com.szi.teamx;
 
+import static com.szi.teamx.model.MyTeams.MY_TEAMS;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +35,6 @@ import java.util.Optional;
 
 public class MyTeamsActivity extends BaseActivity {
     private DatabaseReference databaseReference;
-    private List<Team> teams = new ArrayList<>();
     private AlertDialog dialog;
 
     @Override
@@ -48,13 +49,13 @@ public class MyTeamsActivity extends BaseActivity {
         searchText.setVisibility(View.GONE);
 
         ListView listTeams = findViewById(R.id.lTeams);
-        final TeamNameListAdapter adapter = new TeamNameListAdapter(this, R.layout.team_name_list_item, teams);
+        final TeamNameListAdapter adapter = new TeamNameListAdapter(this, R.layout.team_name_list_item, MY_TEAMS);
         listTeams.setAdapter(adapter);
 
         listTeams.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Team selectedTeam = teams.get(position);
+                Team selectedTeam = MY_TEAMS.get(position);
                 openTeamInfoActivity(selectedTeam);
             }
         });
@@ -82,8 +83,8 @@ public class MyTeamsActivity extends BaseActivity {
                 String teamId = (String) snapshot.getValue();
                 String teamKey = (String) snapshot.getKey();
                 if (teamId != null) {
-                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
-                    removedTeam.ifPresent(team -> teams.remove(team));
+                    Optional<Team> removedTeam = MY_TEAMS.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    removedTeam.ifPresent(team -> MY_TEAMS.remove(team));
 
                     retrieveTeamsDetails(teamKey, teamId, adapter);
                 }
@@ -93,9 +94,9 @@ public class MyTeamsActivity extends BaseActivity {
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 String teamId = (String) snapshot.getValue();
                 if (teamId != null) {
-                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    Optional<Team> removedTeam = MY_TEAMS.stream().filter(t -> t.getId().equals(teamId)).findFirst();
                     if (removedTeam.isPresent()) {
-                        teams.remove(removedTeam.get());
+                        MY_TEAMS.remove(removedTeam.get());
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -129,8 +130,8 @@ public class MyTeamsActivity extends BaseActivity {
                 String teamId = (String) snapshot.getValue();
                 String teamKey = (String) snapshot.getKey();
                 if (teamId != null) {
-                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
-                    removedTeam.ifPresent(team -> teams.remove(team));
+                    Optional<Team> removedTeam = MY_TEAMS.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    removedTeam.ifPresent(team -> MY_TEAMS.remove(team));
 
                     retrieveTeamsDetails(teamKey, teamId, adapter);
                 }
@@ -140,9 +141,9 @@ public class MyTeamsActivity extends BaseActivity {
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 String teamId = (String) snapshot.getValue();
                 if (teamId != null) {
-                    Optional<Team> removedTeam = teams.stream().filter(t -> t.getId().equals(teamId)).findFirst();
+                    Optional<Team> removedTeam = MY_TEAMS.stream().filter(t -> t.getId().equals(teamId)).findFirst();
                     if (removedTeam.isPresent()) {
-                        teams.remove(removedTeam.get());
+                        MY_TEAMS.remove(removedTeam.get());
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -176,7 +177,7 @@ public class MyTeamsActivity extends BaseActivity {
                     Team team = snapshot.getValue(Team.class);
                     team.setKey(teamKey);
                     if (team != null) {
-                        teams.add(team);
+                        MY_TEAMS.add(team);
                         adapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
@@ -214,7 +215,7 @@ public class MyTeamsActivity extends BaseActivity {
             if (result.getContents() != null) {
                 String scannedId = result.getContents();
                 Log.i("scan", scannedId);
-                Optional<Team> team = teams.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
+                Optional<Team> team = MY_TEAMS.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
                 team.ifPresent(this::openTeamInfoActivity);
             }
         }
