@@ -20,6 +20,9 @@
         android:theme="@style/Base.Theme.TeamX"
         tools:targetApi="31">
         <activity
+            android:name=".MyApplicationsActivity"
+            android:exported="false" />
+        <activity
             android:name=".AllTeamsActivity"
             android:exported="false" />
         <activity

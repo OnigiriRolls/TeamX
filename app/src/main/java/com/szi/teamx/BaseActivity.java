@@ -1,7 +1,5 @@
 package com.szi.teamx;
 
-import static com.szi.teamx.model.MyTeams.MY_TEAMS;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,13 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.szi.teamx.model.Team;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 public class BaseActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -70,7 +65,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public void handleAllTeams(View view) {
         Log.d("all", "in handle");
-        if(!this.getClass().equals(AllTeamsActivity.class))
+        if (!this.getClass().equals(AllTeamsActivity.class))
             startActivityWithoutFinish(AllTeamsActivity.class);
     }
 
@@ -81,6 +76,11 @@ public class BaseActivity extends AppCompatActivity {
         intentIntegrator.setOrientationLocked(true);
         intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
         intentIntegrator.initiateScan();
+    }
+
+    public void onApplications(View view) {
+        if (!this.getClass().equals(MyApplicationsActivity.class))
+            startActivityWithoutFinish(MyApplicationsActivity.class);
     }
 
     protected void openTeamInfoActivity(Team team) {

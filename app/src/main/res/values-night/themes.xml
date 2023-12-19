@@ -16,4 +16,9 @@
         <item name="android:textColorHint">#991C1B1F</item>
         <item name="android:textColorHintInverse">#991C1B1F</item>
     </style>
+    <!-- Base application theme. -->
+    <style name="Base.Base.Theme.TeamX" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
 </resources>
