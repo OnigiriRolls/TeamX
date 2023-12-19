@@ -1,5 +1,7 @@
 package com.szi.teamx;
 
+import static com.szi.teamx.model.MyTeams.MY_TEAMS;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.szi.teamx.model.Team;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class BaseActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -64,6 +70,31 @@ public class BaseActivity extends AppCompatActivity {
 
     public void handleAllTeams(View view) {
         Log.d("all", "in handle");
-        startActivityWithoutFinish(AllTeamsActivity.class);
+        if(!this.getClass().equals(AllTeamsActivity.class))
+            startActivityWithoutFinish(AllTeamsActivity.class);
+    }
+
+    public void onScan(View view) {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setPrompt("Scan Team QR Code");
+        intentIntegrator.setOrientationLocked(true);
+        intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
+        intentIntegrator.initiateScan();
+    }
+
+    protected void openTeamInfoActivity(Team team) {
+        Intent intent = new Intent(this, TeamInfoActivity.class);
+        intent.putExtra("teamName", team.getName());
+        intent.putExtra("teamDescription", team.getDescription());
+        intent.putExtra("teamId", team.getId());
+        intent.putExtra("teamOwner", team.getOwner());
+        intent.putExtra("teamKey", team.getKey());
+
+        Collection<String> values = team.getRequirements().values();
+        ArrayList<String> valuesList = new ArrayList<>(values);
+
+        intent.putStringArrayListExtra("teamRequirements", valuesList);
+        startActivity(intent);
     }
 }

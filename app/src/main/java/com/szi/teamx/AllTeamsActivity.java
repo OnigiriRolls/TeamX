@@ -27,7 +27,6 @@ import com.szi.teamx.model.Team;
 import com.szi.teamx.ui.TeamNameListAdapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -164,20 +163,6 @@ public class AllTeamsActivity extends BaseActivity {
         return requirements.values().stream().anyMatch(r -> r.contains(query));
     }
 
-    private void openTeamInfoActivity(Team team) {
-        Intent intent = new Intent(this, TeamInfoActivity.class);
-        intent.putExtra("teamName", team.getName());
-        intent.putExtra("teamDescription", team.getDescription());
-        intent.putExtra("teamId", team.getId());
-        intent.putExtra("teamOwner", team.getOwner());
-
-        Collection<String> values = team.getRequirements().values();
-        ArrayList<String> valuesList = new ArrayList<>(values);
-
-        intent.putStringArrayListExtra("teamRequirements", valuesList);
-        startActivity(intent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -187,7 +172,10 @@ public class AllTeamsActivity extends BaseActivity {
             if (result.getContents() != null) {
                 String scannedId = result.getContents();
                 Log.i("scan", scannedId);
-                Optional<Team> team = teams.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
+                Optional<Team> team = MY_TEAMS.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
+                if (!team.isPresent())
+                    team = teams.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
+
                 team.ifPresent(this::openTeamInfoActivity);
             }
         }

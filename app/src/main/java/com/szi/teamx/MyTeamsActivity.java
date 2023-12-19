@@ -28,9 +28,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.szi.teamx.model.Team;
 import com.szi.teamx.ui.TeamNameListAdapter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class MyTeamsActivity extends BaseActivity {
@@ -191,45 +189,6 @@ public class MyTeamsActivity extends BaseActivity {
         });
     }
 
-    private void openTeamInfoActivity(Team team) {
-        Intent intent = new Intent(this, TeamInfoActivity.class);
-        intent.putExtra("teamName", team.getName());
-        intent.putExtra("teamDescription", team.getDescription());
-        intent.putExtra("teamId", team.getId());
-        intent.putExtra("teamOwner", team.getOwner());
-        intent.putExtra("teamKey", team.getKey());
-
-        Collection<String> values = team.getRequirements().values();
-        ArrayList<String> valuesList = new ArrayList<>(values);
-
-        intent.putStringArrayListExtra("teamRequirements", valuesList);
-        startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-
-        if (result != null) {
-            if (result.getContents() != null) {
-                String scannedId = result.getContents();
-                Log.i("scan", scannedId);
-                Optional<Team> team = MY_TEAMS.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
-                team.ifPresent(this::openTeamInfoActivity);
-            }
-        }
-    }
-
-    public void onScan(View view) {
-        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
-        intentIntegrator.setBeepEnabled(false);
-        intentIntegrator.setPrompt("Scan Team QR Code");
-        intentIntegrator.setOrientationLocked(true);
-        intentIntegrator.setCaptureActivity(CaptureActivityPortrait.class);
-        intentIntegrator.initiateScan();
-    }
-
     private void showExitConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you want to exit the application?")
@@ -247,5 +206,41 @@ public class MyTeamsActivity extends BaseActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (result != null) {
+            if (result.getContents() != null) {
+                String scannedId = result.getContents();
+                Log.i("scan", scannedId);
+                Optional<Team> team = MY_TEAMS.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
+                if (!team.isPresent()) {
+                    getTeamFromAllTeams(scannedId);
+                }
+                team.ifPresent(this::openTeamInfoActivity);
+            }
+        }
+    }
+
+    private void getTeamFromAllTeams(String scannedId) {
+        DatabaseReference teamsRef = FirebaseDatabase.getInstance().getReference();
+        teamsRef.child("teams").child(scannedId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("team", "get success");
+                        Team team = task.getResult().getValue(Team.class);
+                        if (team != null)
+                          openTeamInfoActivity(team);
+                        else {
+                            finish();
+                        }
+                    } else {
+                        Log.d("team", "get error");
+                    }
+                });
     }
 }
