@@ -68,4 +68,9 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="create_team">Create Team</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="add_requirements">Add requirements:</string>
+    <string name="requirement">Requirement</string>
 </resources>

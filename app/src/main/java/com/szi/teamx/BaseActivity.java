@@ -69,6 +69,12 @@ public class BaseActivity extends AppCompatActivity {
             startActivityWithoutFinish(AllTeamsActivity.class);
     }
 
+    public void onAddTeam(View view) {
+        if (!this.getClass().equals(AddTeamActivity.class))
+            startActivityWithoutFinish(AddTeamActivity.class);
+    }
+
+
     public void onScan(View view) {
         IntentIntegrator intentIntegrator = new IntentIntegrator(this);
         intentIntegrator.setBeepEnabled(false);

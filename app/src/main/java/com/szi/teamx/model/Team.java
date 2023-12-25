@@ -51,6 +51,34 @@ public class Team {
         return requirements;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLowerCaseName(String lowerCaseName) {
+        this.lowerCaseName = lowerCaseName;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setRequirements(Map<String, String> requirements) {
+        this.requirements = requirements;
+    }
+
+    public void setRequirementsLower(Map<String, String> requirementsLower) {
+        this.requirementsLower = requirementsLower;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

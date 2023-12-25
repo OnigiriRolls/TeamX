@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/light_yellow"
+    android:padding="5dp">
+
+    <EditText
+        android:id="@+id/tRequirement"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:gravity="center_vertical"
+        android:autoSizeMaxTextSize="18sp"
+        android:autoSizeTextType="none"
+        android:textFontWeight="500"
+        android:layout_marginEnd="10dp"
+        android:hint="@string/requirement"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/black"
+        android:textCursorDrawable="@drawable/text_hint_color_selector" />
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_weight="0.3"
+        android:layout_height="40dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_application"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:onClick="addInput"
+        android:textColor="@color/black"
+        android:layout_marginEnd="10dp"/>
+
+    <ImageButton
+        android:id="@+id/bDelete"
+        android:layout_width="0dp"
+        android:layout_weight="0.3"
+        android:layout_height="40dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_application"
+        app:srcCompat="@android:drawable/ic_delete"
+        android:onClick="deleteInput"
+        android:textColor="@color/black" />
+
+</LinearLayout>
