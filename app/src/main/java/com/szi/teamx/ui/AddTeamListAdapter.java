@@ -44,16 +44,16 @@ public class AddTeamListAdapter extends ArrayAdapter<RequirementItem> {
 
             itemHolder.tRequirement.setTag(position);
             itemHolder.bDelete.setTag(position);
+
             view.setTag(itemHolder);
         } else {
             itemHolder = (AddTeamListAdapter.ItemHolder) view.getTag();
         }
 
+
         itemHolder.bDelete.setContentDescription(String.valueOf(position));
-        itemHolder.bAdd.setContentDescription(String.valueOf(position));
 
         itemHolder.tRequirement.removeTextChangedListener(itemHolder.textWatcher);
-
         itemHolder.textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -75,15 +75,6 @@ public class AddTeamListAdapter extends ArrayAdapter<RequirementItem> {
 
         itemHolder.tRequirement.addTextChangedListener(itemHolder.textWatcher);
 
-        itemHolder.bDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (position != 0) {
-                    requirements.remove(position);
-                    notifyDataSetChanged();
-                }
-            }
-        });
 
         return view;
     }

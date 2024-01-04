@@ -56,16 +56,12 @@ public class AddTeamActivity extends BaseActivity {
     private void setRequirements(List<RequirementItem> requirements, Team team) {
         String r = "r_";
         int i = 1;
+        team.setRequirements(new HashMap<String, String>());
+        team.setRequirementsLower(new HashMap<String, String>());
         for (RequirementItem requirement : requirements) {
             String key = r + i;
-            Map<String, String> requirementsTeam = new HashMap<>();
-            requirementsTeam.put(key, requirement.getUserInput());
-            team.setRequirements(requirementsTeam);
-
-            Map<String, String> requirementsLowerCaseTeam = new HashMap<>();
-            requirementsLowerCaseTeam.put(key, requirement.getUserInput().toLowerCase());
-            team.setRequirementsLower(requirementsLowerCaseTeam);
-
+            team.getRequirements().put(key, requirement.getUserInput());
+            team.getRequirementsLower().put(key, requirement.getUserInput().toLowerCase());
             i++;
         }
     }
@@ -73,16 +69,23 @@ public class AddTeamActivity extends BaseActivity {
     public void addInput(View view) {
         RequirementItem item = new RequirementItem();
         item.setUserInput("");
-        requirements.add(item);
+        List<RequirementItem> tmp = new ArrayList<>(requirements);
+        tmp.add(item);
+        requirements.clear();
+        requirements.addAll(tmp);
         adapter.notifyDataSetChanged();
     }
 
-//    public void deleteInput(View view) {
-//        String positionString = view.getContentDescription().toString();
-//        int position = Integer.parseInt(positionString);
-//        if (position > 0 && position < requirements.size()) {
-//            requirements.remove(position);
-//            adapter.notifyDataSetChanged();
-//        }
-//    }
+    public void deleteInput(View view) {
+        String positionString = view.getContentDescription().toString();
+        int position = Integer.parseInt(positionString);
+        if (position > 0 && position < requirements.size()) {
+            RequirementItem item = requirements.get(position);
+            List<RequirementItem> tmp = new ArrayList<>(requirements);
+            tmp.remove(item);
+            requirements.clear();
+            requirements.addAll(tmp);
+            adapter.notifyDataSetChanged();
+        }
+    }
 }
