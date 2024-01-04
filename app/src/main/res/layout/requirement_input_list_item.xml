@@ -25,6 +25,7 @@
         android:textCursorDrawable="@drawable/text_hint_color_selector" />
 
     <ImageButton
+        android:id="@+id/bAdd"
         android:layout_width="0dp"
         android:layout_weight="0.3"
         android:layout_height="40dp"

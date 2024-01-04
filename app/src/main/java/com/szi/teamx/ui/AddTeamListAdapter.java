@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.szi.teamx.R;
 import com.szi.teamx.model.RequirementItem;
@@ -31,7 +29,7 @@ public class AddTeamListAdapter extends ArrayAdapter<RequirementItem> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         AddTeamListAdapter.ItemHolder itemHolder;
         View view = convertView;
 
@@ -40,34 +38,52 @@ public class AddTeamListAdapter extends ArrayAdapter<RequirementItem> {
             itemHolder = new AddTeamListAdapter.ItemHolder();
 
             view = inflater.inflate(layoutResID, parent, false);
-            itemHolder.tRequirement = (EditText) view.findViewById(R.id.tRequirement);
-            itemHolder.bDelete = (ImageButton) view.findViewById(R.id.bDelete);
+            itemHolder.tRequirement = view.findViewById(R.id.tRequirement);
+            itemHolder.bDelete = view.findViewById(R.id.bDelete);
+            itemHolder.bAdd = view.findViewById(R.id.bAdd);
 
+            itemHolder.tRequirement.setTag(position);
+            itemHolder.bDelete.setTag(position);
             view.setTag(itemHolder);
         } else {
             itemHolder = (AddTeamListAdapter.ItemHolder) view.getTag();
         }
 
-        if (requirements != null && requirements.size() >= position) {
-            final RequirementItem tItem = requirements.get(position);
-            itemHolder.tRequirement.setText(tItem.getUserInput());
-            itemHolder.bDelete.setContentDescription(String.valueOf(position));
+        itemHolder.bDelete.setContentDescription(String.valueOf(position));
+        itemHolder.bAdd.setContentDescription(String.valueOf(position));
 
-            itemHolder.tRequirement.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
+        itemHolder.tRequirement.removeTextChangedListener(itemHolder.textWatcher);
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
+        itemHolder.textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
-                @Override
-                public void afterTextChanged(Editable editable) {
-                   tItem.setUserInput(editable.toString());
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                final EditText caption = itemHolder.tRequirement;
+                if (caption.getText().toString().length() > 0) {
+                    RequirementItem item = requirements.get(position);
+                    item.setUserInput(caption.getText().toString());
                 }
-            });
-        }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        };
+
+        itemHolder.tRequirement.addTextChangedListener(itemHolder.textWatcher);
+
+        itemHolder.bDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (position != 0) {
+                    requirements.remove(position);
+                    notifyDataSetChanged();
+                }
+            }
+        });
 
         return view;
     }
@@ -75,5 +91,7 @@ public class AddTeamListAdapter extends ArrayAdapter<RequirementItem> {
     private static class ItemHolder {
         EditText tRequirement;
         ImageButton bDelete;
+        ImageButton bAdd;
+        TextWatcher textWatcher;
     }
 }

@@ -33,7 +33,9 @@ public class AddTeamActivity extends BaseActivity {
         adapter = new AddTeamListAdapter(this, R.layout.requirement_input_list_item, requirements);
         lRequirements.setAdapter(adapter);
 
-        requirements.add(new RequirementItem());
+        RequirementItem item = new RequirementItem();
+        item.setUserInput("");
+        requirements.add(item);
         adapter.notifyDataSetChanged();
     }
 
@@ -69,17 +71,18 @@ public class AddTeamActivity extends BaseActivity {
     }
 
     public void addInput(View view) {
-        requirements.add(new RequirementItem());
+        RequirementItem item = new RequirementItem();
+        item.setUserInput("");
+        requirements.add(item);
         adapter.notifyDataSetChanged();
     }
 
-    public void deleteInput(View view) {
-        String positionString = view.getContentDescription().toString();
-        int position = Integer.parseInt(positionString);
-        if (position > 0 && position < requirements.size())
-        {
-            requirements.remove(position);
-            adapter.notifyDataSetChanged();
-        }
-    }
+//    public void deleteInput(View view) {
+//        String positionString = view.getContentDescription().toString();
+//        int position = Integer.parseInt(positionString);
+//        if (position > 0 && position < requirements.size()) {
+//            requirements.remove(position);
+//            adapter.notifyDataSetChanged();
+//        }
+//    }
 }
