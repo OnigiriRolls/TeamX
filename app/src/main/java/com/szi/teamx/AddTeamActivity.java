@@ -135,11 +135,7 @@ public class AddTeamActivity extends BaseActivity {
         String positionString = view.getContentDescription().toString();
         int position = Integer.parseInt(positionString);
         if (position > 0 && position < requirements.size()) {
-            RequirementItem item = requirements.get(position);
-            List<RequirementItem> tmp = new ArrayList<>(requirements);
-            tmp.remove(item);
-            requirements.clear();
-            requirements.addAll(tmp);
+            requirements.remove(position);
             adapter.notifyDataSetChanged();
         }
     }
