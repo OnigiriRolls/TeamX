@@ -23,8 +23,10 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.szi.teamx.model.MyTeams;
 import com.szi.teamx.utils.AuthenticationValidator;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends BaseActivity {
@@ -39,6 +41,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MyTeams.MY_TEAMS = new ArrayList<>();
 
         inputsValidator = new AuthenticationValidator();
 

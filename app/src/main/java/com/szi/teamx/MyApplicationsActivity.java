@@ -1,5 +1,8 @@
 package com.szi.teamx;
 
+import static com.szi.teamx.model.MyTeams.MY_TEAMS;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +16,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.szi.teamx.model.OwnerApplication;
 import com.szi.teamx.model.Team;
 import com.szi.teamx.ui.ApplicationListAdapter;
@@ -21,6 +26,7 @@ import com.szi.teamx.ui.OwnerApplicationListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class MyApplicationsActivity extends BaseActivity {
     List<String> myApplications = new ArrayList<>();
@@ -171,6 +177,42 @@ public class MyApplicationsActivity extends BaseActivity {
                             app.setUserName(name);
                             ownerApplications.add(app);
                             adapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        Log.d("team", "get error");
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (result != null) {
+            if (result.getContents() != null) {
+                String scannedId = result.getContents();
+                Log.i("scan", scannedId);
+                Optional<Team> team = MY_TEAMS.stream().filter(t -> t.getId().equals(scannedId)).findFirst();
+                if (!team.isPresent()) {
+                    getTeamFromAllTeams(scannedId);
+                }
+                team.ifPresent(this::openTeamInfoActivity);
+            }
+        }
+    }
+
+    private void getTeamFromAllTeams(String scannedId) {
+        DatabaseReference teamsRef = FirebaseDatabase.getInstance().getReference();
+        teamsRef.child("teams").child(scannedId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("team", "get success");
+                        Team team = task.getResult().getValue(Team.class);
+                        if (team != null)
+                            openTeamInfoActivity(team);
+                        else {
+                            finish();
                         }
                     } else {
                         Log.d("team", "get error");

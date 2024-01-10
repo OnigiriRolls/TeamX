@@ -13,8 +13,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.szi.teamx.model.RequirementItem;
 import com.szi.teamx.model.Team;
 import com.szi.teamx.ui.AddTeamListAdapter;
@@ -95,8 +98,7 @@ public class AddTeamActivity extends BaseActivity {
         teamsRef.child(teamId).child("id").setValue(teamId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d("Firebase", "Team saved successfully");
-                hideLoadingDialog(dialog);
-                showMessageDialog("Team created successfully!");
+                saveTeamToOwner(teamId);
             } else {
                 Log.e("Firebase", "Error updating id: " + task.getException().getMessage());
                 addButton.setEnabled(true);
@@ -104,6 +106,27 @@ public class AddTeamActivity extends BaseActivity {
                 showMessageDialog("There was an error! Please try again later!");
             }
         });
+    }
+
+    private void saveTeamToOwner(String teamId) {
+        DatabaseReference teamsRef = FirebaseDatabase.getInstance().getReference()
+                .child("users")
+                .child(getCurrentUser().getUid())
+                .child("teamsOwner");
+
+        String teamOwnerId = teamsRef.push().getKey();
+
+        teamsRef.child(teamOwnerId).setValue(teamId)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("Firebase", "Team saved successfully to owner");
+                        hideLoadingDialog(dialog);
+                        showMessageDialog("Team created successfully!");
+                    } else {
+                        Log.e("Firebase", "Error saving team: " + task.getException().getMessage());
+                        showMessageDialog("There was an error! Please try again later!");
+                    }
+                });
     }
 
     private void setRequirements(List<RequirementItem> requirements, Team team) {
